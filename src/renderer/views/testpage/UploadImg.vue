@@ -20,6 +20,7 @@
   </div>
 </template>
 <script>
+  var fs = require('fs');
   export default {
     data() {
       return {
@@ -31,6 +32,18 @@
         fileList: [],
         compressFileList: []
       };
+    },
+    mounted() {
+      console.log(fs)
+      fs.stat('D:/BF/Desktop/新建文件夹', function (err, stats) {
+          if (err) {
+            console.log(err)
+            return
+          }
+          console.log(stats.isDirectory(), 'isDirectory')
+          console.log(stats.isFile(), 'isFile')
+          console.log(stats, 'stats');
+      })
     },
     methods: {
       uploadChange(file, fileList) {
