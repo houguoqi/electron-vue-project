@@ -6,13 +6,24 @@ Vue.use(Router)
 export default new Router({
   routes: [
     {
-      path: '/',
-      name: 'landing-page',
-      component: require('@/components/LandingPage').default
-    },
-    {
       path: '*',
       redirect: '/'
+    },
+    {
+      path: '/',
+      name: 'home',
+      component: require('@/views/home/Home').default,
+      children: [
+        {
+          path: '/',
+          redirect: '/upload-file'
+        },
+        {
+          path: '/upload-file',
+          name: 'upload-file',
+          component: require('@/views/testpage/UploadImg').default
+        }
+      ]
     }
   ]
 })

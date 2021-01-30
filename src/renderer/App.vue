@@ -1,6 +1,5 @@
 <template>
   <div id="app">
-      <el-button type="danger">测试element</el-button>
     <router-view></router-view>
   </div>
 </template>
@@ -13,4 +12,8 @@
 
 <style>
   /* CSS */
+  * {
+    padding: 0;
+    margin: 0;
+  }
 </style>
