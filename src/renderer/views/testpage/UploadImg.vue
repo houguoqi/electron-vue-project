@@ -104,6 +104,10 @@
           this.$message.info('未设置输出文件夹')
           return
         }
+        if (!this.validateImage(this.fileList)) {
+          this.$message.info('存在非图片类型文件')
+          return
+        }
         this.clear()
         if (this.fileList.length) {
           this.loading = this.$loading({
@@ -115,9 +119,20 @@
           })
         }
       },
+      validateImage(fileList) {
+        let res = true
+        if (fileList.length) {
+          fileList.forEach(ele => {
+            if (!this.getImageType(ele.name)) {
+              res = false
+            }
+          })
+        }
+        return res
+      },
       getImageType(str) {
         var reg = /\.(png|jpg|gif|jpeg|webp)$/;
-        return str.match(reg)[1];
+        return str.match(reg);
       },
       // 将图片转为base64
       ToBase64(files) {
