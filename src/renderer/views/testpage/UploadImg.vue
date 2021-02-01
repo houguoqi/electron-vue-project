@@ -41,6 +41,7 @@
 <script>
   const fs = require('fs');
   const path = require('path');
+  const process = require('child_process');
   export default {
     data() {
       return {
@@ -72,34 +73,11 @@
       if (window.localStorage.getItem('outPutDirPath')) {
         this.outPutDirPath = window.localStorage.getItem('outPutDirPath')
       }
-      // console.log(fs)
-      // const dirpath = "D:/BF/Desktop/新建文件夹/"
-      // fs.readdir(dirpath, function(err, files){
-      //   if (err) {
-      //       return console.error(err);
-      //   }
-      //   fs.mkdir("D:/BF/Desktop/新建文件夹/新目录",function(err){
-      //     if (err) {
-      //         return console.error(err);
-      //     }
-      //     console.log("目录创建成功。");
-      //   });
-      //   files.forEach( function (file){
-      //       console.log( file );
-      //       fs.stat(path.join(dirpath, file), function (error, result) {
-      //         console.log(result.isDirectory(), result.isFile())
-      //       })
-      //   });
-      // });
     },
     methods: {
       // 设置输出目录
       chooseDir(value) {
         console.log(value)
-        this.outPutDirPath = value.replace(/\\/g,"/") + '/'
-        if (this.outPutDirPath) {
-          window.localStorage.setItem('outPutDirPath', this.outPutDirPath)
-        }
       },
       uploadChange(file, fileList) {
         this.fileList = []
@@ -117,10 +95,16 @@
         this.dialogVisible = true;
       },
       imgDeal() {
-        this.loading = null
-        this.isFinish = false
-        this.compressFileList = []
-        this.compressFileListBase64 = []
+        console.log(this.fileList)
+        if (!this.fileList.length) {
+          this.$message.info('未选择图片')
+          return
+        }
+        if (!this.outPutDirPath) {
+          this.$message.info('未设置输出文件夹')
+          return
+        }
+        this.clear()
         if (this.fileList.length) {
           this.loading = this.$loading({
             text: '压缩中...'
@@ -162,17 +146,39 @@
       // 开始写入
       startWrite() {
         const self = this
+        const outPath = self.outPutDirPath.replace(/\\/g,"/") + '/'
+        window.localStorage.setItem('outPutDirPath', self.outPutDirPath)
         self.compressFileListBase64.forEach((ele, index) => {
           const base64Data = ele.replace(/^data:image\/\w+;base64,/, ""),
           dataBuffer = Buffer.from(base64Data, 'base64'),
           getName = self.fileList[index].name
-          fs.writeFile(self.outPutDirPath + getName, dataBuffer, err => {
+          fs.writeFile(outPath + getName, dataBuffer, err => {
               if (err) {
                   throw err;
               };
               console.log('写入成功')
           });
         })
+        // 写入后自动清空并打开文件夹
+        self.clear('ENDING')
+        setTimeout(() => {
+          window.location.reload()
+        }, 1000);
+        const cmd = `start ${outPath}`
+        process.exec(cmd, function(error, stdout, stderr) {
+          console.log("error:" + error);
+          console.log("stdout:" + stdout);
+          console.log("stderr:" + stderr);
+        });
+      },
+      clear(status) {
+        this.file = null
+        this.loading = null
+        this.compressFileList = []
+        this.compressFileListBase64 = []
+        if (status === 'ENDING') {
+          this.fileList = []
+        }
       },
       // 写入压缩后的图片
       writeCompressedImg(compressFileList) {
