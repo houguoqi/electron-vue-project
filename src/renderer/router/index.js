@@ -27,10 +27,23 @@ const router = new Router({
           path: '/mark-down-note',
           name: 'mark-down-note',
           component: require('@/views/page/MarkDownNote').default
+        },
+        {
+          path: '/login',
+          name: 'login',
+          component: require('@/views/page/Login').default
         }
       ]
     }
   ]
+})
+
+router.beforeEach((to, from, next) => {
+  if (to.path === '/login') return next()
+  const userInfo = window.localStorage.getItem('userInfo')
+  // 如果没有userInfo 则直接跳转到登录页
+  if (!userInfo) return next('/login')
+  next()
 })
 
 // 渲染进程接收主进程的传参
