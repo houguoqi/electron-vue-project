@@ -30,6 +30,62 @@ function createWindow () {
   })
 }
 
+// 自定义菜单
+const menuTemplate = [
+  {
+    label: '主页',
+    click() {
+      // 页面跳转方式一（推荐）
+      mainWindow.webContents.send('href', '/upload-file');
+      // 页面跳转方式二
+      // mainWindow.loadURL(winURL+'#/index')
+    }
+  },
+  {
+    label: '我的工具',
+    submenu: [
+      {
+        label: '压缩图片',
+        click() {
+          mainWindow.webContents.send('href', '/upload-file');
+        }
+      },
+      {
+        label: 'markdown便签',
+        click() {
+          mainWindow.webContents.send('href', '/mark-down-note');
+        }
+      }
+    ]
+  },
+  {
+    label: '操作',
+    submenu: [
+      {
+        label: '最小化',
+        click() {
+          mainWindow.minimize()
+        }
+      },
+      {
+        label: '最大化',
+        click() {
+          mainWindow.maximize()
+        }
+      },
+      {
+        label: '关闭',
+        click() {
+          mainWindow.close()
+        }
+      }
+    ]
+  }
+];
+ 
+var Menu = require('electron').Menu;
+Menu.setApplicationMenu( Menu.buildFromTemplate(menuTemplate));
+
 app.on('ready', createWindow)
 
 app.on('window-all-closed', () => {

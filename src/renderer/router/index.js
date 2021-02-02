@@ -3,7 +3,7 @@ import Router from 'vue-router'
 
 Vue.use(Router)
 
-export default new Router({
+const router = new Router({
   routes: [
     {
       path: '*',
@@ -21,9 +21,26 @@ export default new Router({
         {
           path: '/upload-file',
           name: 'upload-file',
-          component: require('@/views/testpage/UploadImg').default
+          component: require('@/views/page/CompressImgage').default
+        },
+        {
+          path: '/mark-down-note',
+          name: 'mark-down-note',
+          component: require('@/views/page/MarkDownNote').default
         }
       ]
     }
   ]
 })
+
+// 渲染进程接收主进程的传参
+const { ipcRenderer } = require('electron');
+ 
+ipcRenderer.on('href', (event, arg) => {
+  if (arg !== router.currentRoute.fullPath) {
+    router.push({ path: arg });
+  }
+});
+
+export default router
+
