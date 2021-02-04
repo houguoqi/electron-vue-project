@@ -15,6 +15,11 @@
       <el-col :span="6">
         <el-input @input="chooseDir" v-model="outPutDirPath" size="small" placeholder="填写输出目录" />
       </el-col>
+      <el-col :span="6">
+        <el-tooltip class="item" effect="dark" content="如: [ D:\BF\Desktop\新建文件夹\新目录 ]" placement="right">
+          <i style="color:#4a9cd8;margin-top:6px;font-size:20px;margin-left: 16px;" class="el-icon-warning"></i>
+        </el-tooltip>
+      </el-col>
     </el-row>
     <el-row style="margin-top:15px;">
       <el-col :span="6">
@@ -43,7 +48,7 @@
         dialogImageUrl: '',
         dialogVisible: false,
         multiple: true,
-        limit: 50,
+        limit: 200,
         file: null,
         fileList: [],
         compressFileList: [],
