@@ -20,7 +20,7 @@
     "postinstall": ""
   },
   "build": {
-    "productName": "my-project",
+    "productName": "芒果皮er",
     "appId": "com.example.yourapp",
     "directories": {
       "output": "build"

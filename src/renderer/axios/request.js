@@ -20,8 +20,8 @@ service.interceptors.request.use(config => {
    // 这里使用了vuex的持久化，所以直接拿store里面的token
    const token = store.getters.token
    if(token){
-      config.params = {'token':token} //如果要求携带在参数中
-      config.headers.token= token; //如果要求携带在请求头中
+      // config.params = {'token':token} //如果要求携带在参数中
+      // config.headers.token= token; //如果要求携带在请求头中
     }
   return config
 }, error => {

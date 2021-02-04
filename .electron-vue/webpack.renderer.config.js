@@ -19,7 +19,8 @@ const { VueLoaderPlugin } = require('vue-loader')
  * that provide pure *.vue files that need compiling
  * https://simulatedgreg.gitbooks.io/electron-vue/content/en/webpack-configurations.html#white-listing-externals
  */
-let whiteListedModules = ['vue']
+// 将vue模块列为白名单--解决el-table不显示问题
+let whiteListedModules = ['vue', 'element-ui']
 
 let rendererConfig = {
   devtool: '#cheap-module-eval-source-map',
@@ -160,7 +161,7 @@ if (process.env.NODE_ENV !== 'production') {
   rendererConfig.plugins.push(
     new webpack.DefinePlugin({
       '__static': `"${path.join(__dirname, '../static').replace(/\\/g, '\\\\')}"`,
-      'process.env.VUE_APP_BASE_URL': '"http://www.hgqweb.cn:3688"'
+      'process.env.VUE_APP_BASE_URL': '"https://www.hgqweb.cn:3688"'
     })
   )
 }
@@ -182,7 +183,7 @@ if (process.env.NODE_ENV === 'production') {
     ]),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': '"production"',
-      'process.env.VUE_APP_BASE_URL': '"http://www.hgqweb.cn:3688"'
+      'process.env.VUE_APP_BASE_URL': '"https://www.hgqweb.cn:3688"'
     }),
     new webpack.LoaderOptionsPlugin({
       minimize: true

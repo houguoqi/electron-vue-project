@@ -171,6 +171,15 @@
               console.log('写入成功')
           });
         })
+        self.$http.get('/compress_record', {
+          user_id: self.$store.getters.userInfo.id,
+          username: self.$store.getters.userInfo.username,
+          count: Number(self.compressFileListBase64.length)
+        }).then(res => {
+          console.log(res)
+        }).catch(err => {
+          console.log(err)
+        })
         // 写入后自动清空并打开文件夹
         self.clear('ENDING')
         setTimeout(() => {
