@@ -19,12 +19,7 @@
     <el-row style="margin-top:15px;">
       <el-col :span="6">
         <el-select style="width:100%;" size="small" v-model="optity" placeholder="请选择清晰度">
-          <el-option
-            v-for="item in optityArr"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value">
-          </el-option>
+          <el-option v-for="item in optityArr" :key="item.value" :label="item.label" :value="item.value"></el-option>
         </el-select>
       </el-col>
     </el-row>
@@ -73,6 +68,8 @@
       if (window.localStorage.getItem('outPutDirPath')) {
         this.outPutDirPath = window.localStorage.getItem('outPutDirPath')
       }
+      console.log(this.$store.getters.token)
+      console.log(this.$store.getters.userInfo)
     },
     methods: {
       // 设置输出目录

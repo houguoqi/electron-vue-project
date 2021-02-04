@@ -4,6 +4,7 @@ import Router from 'vue-router'
 Vue.use(Router)
 
 const router = new Router({
+  mode: "hash",
   routes: [
     {
       path: '*',
@@ -29,6 +30,11 @@ const router = new Router({
           component: require('@/views/page/MarkDownNote').default
         },
         {
+          path: '/user-record',
+          name: 'user-record',
+          component: require('@/views/page/UseRecords').default
+        },
+        {
           path: '/login',
           name: 'login',
           component: require('@/views/page/Login').default
@@ -40,9 +46,9 @@ const router = new Router({
 
 router.beforeEach((to, from, next) => {
   if (to.path === '/login') return next()
-  const userInfo = window.localStorage.getItem('userInfo')
-  // 如果没有userInfo 则直接跳转到登录页
-  if (!userInfo) return next('/login')
+  const token = window.localStorage.getItem('token')
+  // 如果没有token 则直接跳转到登录页
+  if (!token) return next('/login')
   next()
 })
 

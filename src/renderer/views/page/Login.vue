@@ -1,33 +1,17 @@
 <template>
   <div class="login-container">
-    <el-form :model="ruleForm2" :rules="rules2"
-      status-icon
-      ref="ruleForm2" 
-      label-position="left" 
-      label-width="0px" 
-      class="demo-ruleForm login-page">
-        <h3 class="title">登录</h3>
-        <el-form-item prop="username">
-            <el-input type="text" 
-                v-model="ruleForm2.username" 
-                auto-complete="off" 
-                placeholder="用户名"
-            ></el-input>
-        </el-form-item>
-            <el-form-item prop="password">
-                <el-input type="password" 
-                    v-model="ruleForm2.password" 
-                    auto-complete="off" 
-                    placeholder="密码"
-                ></el-input>
-            </el-form-item>
-        <el-checkbox 
-            v-model="checked"
-            class="rememberme"
-        >记住密码</el-checkbox>
-        <el-form-item style="width:100%;">
-            <el-button type="primary" style="width:100%;" @click="handleSubmit" :loading="logining">登录</el-button>
-        </el-form-item>
+    <el-form :model="ruleForm2" :rules="rules2" status-icon ref="ruleForm2" label-position="left" label-width="0px" class="demo-ruleForm login-page">
+      <h3 class="title">登录</h3>
+      <el-form-item prop="username">
+        <el-input type="text" v-model="ruleForm2.username" auto-complete="off" placeholder="用户名"></el-input>
+      </el-form-item>
+      <el-form-item prop="password">
+        <el-input type="password" v-model="ruleForm2.password" auto-complete="off" placeholder="密码"></el-input>
+      </el-form-item>
+      <el-checkbox v-model="checked" class="rememberme">记住密码</el-checkbox>
+      <el-form-item style="width:100%;">
+        <el-button type="primary" style="width:100%;" @click="handleSubmit" :loading="logining">登录</el-button>
+      </el-form-item>
     </el-form>
   </div>
 </template>
@@ -37,8 +21,8 @@ export default {
     return {
         logining: false,
         ruleForm2: {
-            username: 'admin',
-            password: '123456',
+            username: '',
+            password: '',
         },
         rules2: {
             username: [{required: true, message: '账号不能为空', trigger: 'blur'}],
@@ -48,21 +32,26 @@ export default {
       }
   },
   methods: {
-    handleSubmit(event){
+    handleSubmit(){
       this.$refs.ruleForm2.validate((valid) => {
         if(valid){
-          this.logining = true;
-          if(this.ruleForm2.username === 'admin' && 
-            this.ruleForm2.password === '123456'){
-            this.logining = false;
-            sessionStorage.setItem('user', this.ruleForm2.username);
-            this.$router.push({path: '/'});
-          }else{
-            this.logining = false;
-            this.$alert('username or password wrong!', 'info', {
-                confirmButtonText: 'ok'
-            })
-          }
+          this.$http.get('/login', {
+            username: this.ruleForm2.username,
+            password: this.ruleForm2.password
+          }).then(res => {
+            console.log(res)
+            if (res.data.code === 500) {
+              this.$message.warning(res.data.message)
+            } else {
+              window.localStorage.setItem('token', res.data.token)
+              window.localStorage.setItem('userInfo', JSON.stringify(res.data.userInfo))
+              this.$store.commit("app/SET_TOKEN", res.data.token)
+              this.$store.commit("app/SET_USERINFO", res.data.userInfo)
+              this.$router.push('/upload-file')
+            }
+          }).catch(err => {
+            console.log(err)
+          })
         }else{
           console.log('error submit!');
           return false;
